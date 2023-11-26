@@ -14,7 +14,6 @@ var dbInstance *gorm.DB
 
 // Init 初始化数据库
 func Init() error {
-
 	source := "%s:%s@tcp(%s)/%s?readTimeout=1500ms&writeTimeout=1500ms&charset=utf8&loc=Local&&parseTime=true"
 	user := os.Getenv("MYSQL_USERNAME")
 	pwd := os.Getenv("MYSQL_PASSWORD")
@@ -28,7 +27,7 @@ func Init() error {
 
 	db, err := gorm.Open(mysql.Open(source), &gorm.Config{
 		NamingStrategy: schema.NamingStrategy{
-			SingularTable: true, // use singular table name, table for `User` would be `user` with this option enabled
+			SingularTable: true, // use singular table name, table for `User` would be `user.go` with this option enabled
 		}})
 	if err != nil {
 		fmt.Println("DB Open error,err=", err.Error())
