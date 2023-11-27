@@ -8,6 +8,20 @@ import (
 	"wxcloudrun-golang/db/model"
 )
 
+type AllSeatGetReq struct {
+	UserID int `json:"userID"`
+}
+
+type SeatData struct {
+	SeatID int    `json:"seatID"`
+	SeatNo string `json:"seatNo"`
+	Status int    `json:"status"`
+}
+type AllSeatGetResp struct {
+	TotalNum     int         `json:"totalNum"`
+	AvailableNum int         `json:"availableNum"`
+	SeatInfo     []*SeatData `json:"seatInfo"`
+}
 type SeatGetReq struct {
 	UserID int `json:"userID"`
 }
@@ -20,6 +34,36 @@ type SeatGetData struct {
 type SeatPostReq struct {
 	UserID int `json:"userID"`
 	SeatID int `json:"seatID"`
+}
+
+func AllSeatGetFunc(r *http.Request) (res *JsonResult) {
+	res = &JsonResult{}
+	seats, err := dao.ISeatInterface.GetAllSeats()
+	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	availableNum := 0
+	totalNum := len(seats)
+	seatInfoList := make([]*SeatData, 0)
+	for _, seat := range seats {
+		if seat.Status == int32(model.FreeStatus) {
+			availableNum += 1
+		}
+		seatInfoList = append(seatInfoList, &SeatData{
+			SeatID: int(seat.ID),
+			SeatNo: seat.SeatNo,
+			Status: int(seat.Status),
+		})
+	}
+
+	res.Data = &AllSeatGetResp{
+		TotalNum:     totalNum,
+		AvailableNum: availableNum,
+		SeatInfo:     seatInfoList,
+	}
+	return
 }
 
 func SeatGetFunc(r *http.Request) (res *JsonResult) {

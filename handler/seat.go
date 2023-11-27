@@ -7,13 +7,11 @@ import (
 	"wxcloudrun-golang/service"
 )
 
-func SeatHandler(w http.ResponseWriter, r *http.Request) {
+func AllSeatHandler(w http.ResponseWriter, r *http.Request) {
 	res := &service.JsonResult{}
 
 	if r.Method == http.MethodGet {
-		res = service.SeatGetFunc(r)
-	} else if r.Method == http.MethodPost {
-		res = service.SeatPostFunc(r)
+		res = service.AllSeatGetFunc(r)
 	} else {
 		res.Code = -1
 		res.ErrorMsg = fmt.Sprintf("请求方法 %s 不支持", r.Method)
@@ -28,17 +26,13 @@ func SeatHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(msg)
 }
 
-func AllSeatHandler(w http.ResponseWriter, r *http.Request) {
-	res := &JsonResult{}
+func SeatHandler(w http.ResponseWriter, r *http.Request) {
+	res := &service.JsonResult{}
 
 	if r.Method == http.MethodGet {
-		counter, err := getCurrentCounter()
-		if err != nil {
-			res.Code = -1
-			res.ErrorMsg = err.Error()
-		} else {
-			res.Data = counter.Count
-		}
+		res = service.SeatGetFunc(r)
+	} else if r.Method == http.MethodPost {
+		res = service.SeatPostFunc(r)
 	} else {
 		res.Code = -1
 		res.ErrorMsg = fmt.Sprintf("请求方法 %s 不支持", r.Method)
