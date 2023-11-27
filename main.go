@@ -13,10 +13,6 @@ func main() {
 		panic(fmt.Sprintf("mysql init failed with %+v", err))
 	}
 
-	// 5.(功能2)发起匹配
-	// 6.(功能2)匹配成功回调 含微信消息推送
-	// 7.(功能2)展示匹配成功信息页
-
 	// 8.(功能3)展示当前房间状态
 	// 9.(功能3)选择房间/座位
 	// 10.(功能3)确认约会
@@ -41,6 +37,9 @@ func main() {
 	// 4.(功能1)展示本人当前座位
 	http.HandleFunc("api/allSeat", handler.AllSeatHandler)
 	http.HandleFunc("/api/seat", handler.SeatHandler)
+	// 5.(功能2)发起匹配
+	// 6.(功能2)匹配成功回调 含微信消息推送
+	// 7.(功能2)展示匹配成功信息页
 
 	log.Fatal(http.ListenAndServe(":80", nil))
 }
