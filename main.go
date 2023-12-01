@@ -40,6 +40,8 @@ func main() {
 	// 5.(功能2)发起匹配
 	// 6.(功能2)匹配成功回调 含微信消息推送
 	// 7.(功能2)展示匹配成功信息页
+	http.HandleFunc("api/blindMatch", handler.BlindMatchHandler)
+	http.HandleFunc("api/callback/blindMatch", handler.AllSeatHandler)
 
 	log.Fatal(http.ListenAndServe(":80", nil))
 }

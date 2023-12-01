@@ -18,7 +18,7 @@ type SeatModelInterfaceImp struct{}
 
 var ISeatInterface = &SeatModelInterfaceImp{}
 
-func (u *SeatModelInterfaceImp) GetSeatByUserID(userID int) (seatInfo []*model.SeatModel, err error) {
+func (s *SeatModelInterfaceImp) GetSeatByUserID(userID int) (seatInfo []*model.SeatModel, err error) {
 	cli := db.Get()
 	seatInfo = make([]*model.SeatModel, 0)
 	if err = cli.Table(SeatTableName).Where("userid = ?", userID).Find(seatInfo).Error; err != nil {
@@ -27,7 +27,7 @@ func (u *SeatModelInterfaceImp) GetSeatByUserID(userID int) (seatInfo []*model.S
 	return
 }
 
-func (u *SeatModelInterfaceImp) GetAllSeats() (seats []*model.SeatModel, err error) {
+func (s *SeatModelInterfaceImp) GetAllSeats() (seats []*model.SeatModel, err error) {
 	cli := db.Get()
 	seats = make([]*model.SeatModel, 0)
 	if err = cli.Table(SeatTableName).Find(seats).Error; err != nil {
@@ -36,7 +36,7 @@ func (u *SeatModelInterfaceImp) GetAllSeats() (seats []*model.SeatModel, err err
 	return
 }
 
-func (u *SeatModelInterfaceImp) GetSeatBySeatID(seatID int) (seatInfo []*model.SeatModel, err error) {
+func (s *SeatModelInterfaceImp) GetSeatBySeatID(seatID int) (seatInfo []*model.SeatModel, err error) {
 	cli := db.Get()
 	seatInfo = make([]*model.SeatModel, 0)
 	if err = cli.Table(SeatTableName).Where("id = ?", seatID).Find(seatInfo).Error; err != nil {
@@ -45,7 +45,7 @@ func (u *SeatModelInterfaceImp) GetSeatBySeatID(seatID int) (seatInfo []*model.S
 	return
 }
 
-func (u *SeatModelInterfaceImp) UpdateSeatBySeatID(seatID, userID int) (err error) {
+func (s *SeatModelInterfaceImp) UpdateSeatBySeatID(seatID, userID int) (err error) {
 	cli := db.Get()
 	if err = cli.Table(SeatTableName).Where("id = ?", seatID).Updates(map[string]interface{}{"userID": userID, "status": model.OccupiedStatus}).Error; err != nil {
 		return
