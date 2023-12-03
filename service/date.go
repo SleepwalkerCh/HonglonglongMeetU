@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"wxcloudrun-golang/db/dao"
 )
 
 type DateStartPostReq struct {
@@ -24,7 +25,12 @@ func DateStartPostFunc(r *http.Request) (res *JsonResult) {
 		res.ErrorMsg = err.Error()
 		return
 	}
-	
+	err = dao.IDateHistoryInterface.CreateDateHistoryRecord(req.RoomID, req.MaleUserID, req.FemaleUserID)
+	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
 	res.Data = "success"
 	return
 }

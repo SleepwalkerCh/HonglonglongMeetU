@@ -190,4 +190,5 @@ func MakeDateRoomInfo(dateRooms []*model.DateRoomModel) (roomInfo []*RoomInfo) {
 			FemaleUserName: GetNickNameFromUserInfoMap(userMap, dateRoom.UserIDFemale),
 		})
 	}
+	return
 }
