@@ -10,7 +10,7 @@ import (
 )
 
 type RegisterReq struct {
-	Gender     int32  `json:"gender"`
+	Gender     int    `json:"gender"`
 	NickName   string `json:"nickName"`
 	RealName   string `json:"realName"`
 	InviteCode string `json:"inviteCode"`
@@ -61,8 +61,8 @@ func RegisterPostFunc(r *http.Request) (res *JsonResult) {
 		NickName: req.NickName,
 		RealName: req.RealName,
 		Gender:   req.Gender,
-		UserType: int32(userType),
-		Status:   int32(model.NormalStatus),
+		UserType: int(userType),
+		Status:   model.NormalStatus,
 	}
 	err = dao.IUserInterface.InsertUser(needInsertUser)
 	if err != nil {
@@ -109,7 +109,7 @@ func getRegisterReq(r *http.Request) (req *RegisterReq, err error) {
 		err = fmt.Errorf("缺少 inviteCode 参数")
 		return
 	}
-	req.Gender = gender.(int32)
+	req.Gender = gender.(int)
 	req.NickName = nickName.(string)
 	req.RealName = realName.(string)
 	req.InviteCode = inviteCode.(string)
@@ -118,7 +118,7 @@ func getRegisterReq(r *http.Request) (req *RegisterReq, err error) {
 
 func validateRegisterReq(req *RegisterReq) (err error) {
 	// gender必须为0,1
-	if tools.InList(req.Gender, []int32{0, 1}) {
+	if tools.InList(req.Gender, []int{0, 1}) {
 		err = fmt.Errorf("gender参数不合法")
 		return
 	}
@@ -136,7 +136,7 @@ func validateRegisterReq(req *RegisterReq) (err error) {
 }
 
 // checkInviteCode 先把嘉宾及管理员邀请码写死
-func checkInviteCode(inviteCode string) model.UserType {
+func checkInviteCode(inviteCode string) int {
 	//admin Base64后前五位
 	if inviteCode == "YWRta" {
 		return model.AdminUserType

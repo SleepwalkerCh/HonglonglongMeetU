@@ -65,13 +65,13 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // modifyCounter 更新计数，自增或者清零
-func modifyCounter(r *http.Request) (int32, error) {
+func modifyCounter(r *http.Request) (int, error) {
 	action, err := getAction(r)
 	if err != nil {
 		return 0, err
 	}
 
-	var count int32
+	var count int
 	if action == "inc" {
 		count, err = upsertCounter(r)
 		if err != nil {
@@ -91,9 +91,9 @@ func modifyCounter(r *http.Request) (int32, error) {
 }
 
 // upsertCounter 更新或修改计数器
-func upsertCounter(r *http.Request) (int32, error) {
+func upsertCounter(r *http.Request) (int, error) {
 	currentCounter, err := getCurrentCounter()
-	var count int32
+	var count int
 	createdAt := time.Now()
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return 0, err

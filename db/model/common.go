@@ -1,21 +1,19 @@
 package model
 
-type Status int32
-
 // User
 const (
-	AbnormalStatus Status = iota
+	AbnormalStatus int = iota
 	NormalStatus
 )
 
 // MatchSetting DateRoom
 const (
-	InactiveStatus Status = iota
+	InactiveStatus int = iota
 	ActiveStatus
 )
 
 // Seat
 const (
-	FreeStatus Status = iota
+	FreeStatus int = iota
 	OccupiedStatus
 )

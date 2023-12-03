@@ -8,7 +8,7 @@ import (
 const tableName = "Counters"
 
 // ClearCounter 清除Counter
-func (imp *CounterInterfaceImp) ClearCounter(id int32) error {
+func (imp *CounterInterfaceImp) ClearCounter(id int) error {
 	cli := db.Get()
 	return cli.Table(tableName).Delete(&model.CounterModel{Id: id}).Error
 }
@@ -20,7 +20,7 @@ func (imp *CounterInterfaceImp) UpsertCounter(counter *model.CounterModel) error
 }
 
 // GetCounter 查询Counter
-func (imp *CounterInterfaceImp) GetCounter(id int32) (*model.CounterModel, error) {
+func (imp *CounterInterfaceImp) GetCounter(id int) (*model.CounterModel, error) {
 	var err error
 	var counter = new(model.CounterModel)
 

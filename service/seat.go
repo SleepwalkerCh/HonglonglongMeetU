@@ -38,6 +38,9 @@ type SeatPostReq struct {
 
 func AllSeatGetFunc(r *http.Request) (res *JsonResult) {
 	res = &JsonResult{}
+	res.Code = 0
+	res.ErrorMsg = ""
+
 	seats, err := dao.ISeatInterface.GetAllSeats()
 	if err != nil {
 		res.Code = -1
@@ -48,7 +51,7 @@ func AllSeatGetFunc(r *http.Request) (res *JsonResult) {
 	totalNum := len(seats)
 	seatInfoList := make([]*SeatData, 0)
 	for _, seat := range seats {
-		if seat.Status == int32(model.FreeStatus) {
+		if seat.Status == model.FreeStatus {
 			availableNum += 1
 		}
 		seatInfoList = append(seatInfoList, &SeatData{
@@ -68,6 +71,9 @@ func AllSeatGetFunc(r *http.Request) (res *JsonResult) {
 
 func SeatGetFunc(r *http.Request) (res *JsonResult) {
 	res = &JsonResult{}
+	res.Code = 0
+	res.ErrorMsg = ""
+
 	//解析入参
 	req, err := getSeatGetReq(r)
 	if err != nil {
@@ -99,6 +105,9 @@ func SeatGetFunc(r *http.Request) (res *JsonResult) {
 
 func SeatPostFunc(r *http.Request) (res *JsonResult) {
 	res = &JsonResult{}
+	res.Code = 0
+	res.ErrorMsg = ""
+
 	//解析入参
 	req, err := getSeatPostReq(r)
 	if err != nil {
@@ -123,7 +132,7 @@ func SeatPostFunc(r *http.Request) (res *JsonResult) {
 		res.ErrorMsg = err.Error()
 		return
 	}
-	if len(seat) != 0 && seat[0].Status != int32(model.FreeStatus) {
+	if len(seat) != 0 && seat[0].Status != model.FreeStatus {
 		res.Code = -1
 		res.ErrorMsg = "该座位已被占用"
 		return
@@ -135,6 +144,7 @@ func SeatPostFunc(r *http.Request) (res *JsonResult) {
 		// TODO 补充错误日志
 		return
 	}
+	res.Data = "Success"
 	return
 }
 

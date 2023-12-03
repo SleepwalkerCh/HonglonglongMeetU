@@ -11,7 +11,7 @@ const UserTableName = "user"
 type UserModelInterface interface {
 	GetAllUsers() ([]*model.UserModel, error)
 	InsertUser(user *model.UserModel) error
-	GetNormalUsersByIDList(userID []int32) (userMap map[int32]*model.UserModel, err error)
+	GetNormalUsersByIDList(userID []int) (userMap map[int]*model.UserModel, err error)
 }
 
 type UserModelInterfaceImp struct{}
@@ -35,9 +35,9 @@ func (u *UserModelInterfaceImp) InsertUser(user *model.UserModel) (err error) {
 	return
 }
 
-func (u *UserModelInterfaceImp) GetNormalUsersByIDList(userID []int32) (userMap map[int32]*model.UserModel, err error) {
+func (u *UserModelInterfaceImp) GetNormalUsersByIDList(userID []int) (userMap map[int]*model.UserModel, err error) {
 	cli := db.Get()
-	userMap = make(map[int32]*model.UserModel)
+	userMap = make(map[int]*model.UserModel)
 	users := make([]*model.UserModel, 0)
 	if err = cli.Table(UserTableName).
 		Where("id = ?", userID).

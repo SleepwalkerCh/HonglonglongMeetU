@@ -13,13 +13,6 @@ func main() {
 		panic(fmt.Sprintf("mysql init failed with %+v", err))
 	}
 
-	// 8.(功能3)展示当前房间状态
-	// 9.(功能3)选择房间/座位
-	// 10.(功能3)确认约会
-	// 11.(功能3)确认结束约会
-	// 12.(功能3)提交约会结果
-	// 13.(功能3)约会结果回调 含微信消息推送
-
 	// 14.(功能4)展示所有用户当前状态
 
 	// 15.(功能5)查看所有嘉宾信息和状态
@@ -32,16 +25,25 @@ func main() {
 	http.HandleFunc("/api/count", handler.CounterHandler)
 	// 1.(功能0)录入信息并提交 昵称+真名+性别+验证码(区分是否为嘉宾或工作人员)
 	http.HandleFunc("/api/register", handler.RegisterHandler)
-	// 2.(功能1)展示当前座位情况
-	// 3.(功能1)录入选定座位
-	// 4.(功能1)展示本人当前座位
+	// 2.(功能1)展示当前座位情况 Done
+	// 3.(功能1)录入选定座位 Done
+	// 4.(功能1)展示本人当前座位 Done
 	http.HandleFunc("api/allSeat", handler.AllSeatHandler)
 	http.HandleFunc("/api/seat", handler.SeatHandler)
 	// 5.(功能2)发起匹配
 	// 6.(功能2)匹配成功回调 含微信消息推送
 	// 7.(功能2)展示匹配成功信息页
+	//TODO
 	http.HandleFunc("api/blindMatch", handler.BlindMatchHandler)
 	http.HandleFunc("api/callback/blindMatch", handler.AllSeatHandler)
-
+	// 8.(功能3)展示当前房间状态 Done
+	// 9.(功能3)选择房间/座位 Done
+	// 10.(功能3)确认约会
+	// 11.(功能3)确认结束约会
+	// 12.(功能3)提交约会结果
+	// 13.(功能3)约会结果回调 含微信消息推送
+	http.HandleFunc("api/roomInfo", handler.RoomInfoHandler)
+	http.HandleFunc("api/dateRoom", handler.DateRoomHandler)
+	http.HandleFunc("/api/dateStart", handler.DateStartHandler)
 	log.Fatal(http.ListenAndServe(":80", nil))
 }

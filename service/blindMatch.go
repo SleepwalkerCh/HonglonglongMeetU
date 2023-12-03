@@ -9,7 +9,7 @@ import (
 )
 
 type BlindMatchGetReq struct {
-	UserID int32 `json:"userID"`
+	UserID int `json:"userID"`
 }
 
 type BlindMatchRecord struct {
@@ -22,30 +22,24 @@ type BlindMatchRecord struct {
 	UpdatedAt      string `json:"updated_at"`
 }
 type BlindMatchGetResp struct {
+	BlindMatching     bool                `json:"blindMatching"`
 	BlindMatchHistory []*BlindMatchRecord `json:"blindMatchHistory"`
 }
 
 func BlindMatchGetFunc(r *http.Request) (res *JsonResult) {
 	res = &JsonResult{}
+	res.Code = 0
+	res.ErrorMsg = ""
+
+
 	req, err := getBlindMatchGetReq(r)
 	if err != nil {
 		res.Code = -1
 		res.ErrorMsg = err.Error()
 		return
 	}
-	userMap, err := dao.IUserInterface.GetNormalUsersByIDList([]int32{req.UserID})
-	if err != nil {
-		res.Code = -1
-		res.ErrorMsg = err.Error()
-		return
-	}
-	if _, ok := userMap[req.UserID]; !ok {
-		err = fmt.Errorf("can not find corrent user,userID:%d", req.UserID)
-		res.Code = -1
-		res.ErrorMsg = err.Error()
-		return
-	}
-	gender := userMap[req.UserID].Gender
+	gender, err := GetGenderByUserID(req.UserID)
+
 	rawBlindMatchHistory, err := dao.IBlindMatchInterface.GetBlindMatchHistoryByUserIDAndGender(req.UserID, int(gender))
 	if err != nil {
 		res.Code = -1
@@ -60,13 +54,15 @@ func BlindMatchGetFunc(r *http.Request) (res *JsonResult) {
 		return
 	}
 	res.Data = &BlindMatchGetResp{
+		BlindMatching:     BlindMatching,
 		BlindMatchHistory: blindMatchHistory,
 	}
 	return
 }
 
+// TODO 抽象userID->userName
 func getBlindMatchHistoryFromRawData(rawBlindMatchHistory []*model.BlindMatchModel) (blindMatchHistory []*BlindMatchRecord, err error) {
-	userIDList := make([]int32, 0)
+	userIDList := make([]int, 0)
 	blindMatchHistory = make([]*BlindMatchRecord, 0)
 	for _, blindMatch := range rawBlindMatchHistory {
 		userIDList = append(userIDList, blindMatch.UserIDMale)
@@ -93,6 +89,9 @@ func getBlindMatchHistoryFromRawData(rawBlindMatchHistory []*model.BlindMatchMod
 // TODO
 func BlindMatchPostFunc(r *http.Request) (res *JsonResult) {
 	res = &JsonResult{}
+	res.Code = 0
+	res.ErrorMsg = ""
+
 	//解析入参
 	req, err := getBlindMatchPostReq(r)
 	if err != nil {
@@ -117,7 +116,7 @@ func BlindMatchPostFunc(r *http.Request) (res *JsonResult) {
 		res.ErrorMsg = err.Error()
 		return
 	}
-	if len(seat) != 0 && seat[0].Status != int32(model.FreeStatus) {
+	if len(seat) != 0 && seat[0].Status != model.FreeStatus) {
 		res.Code = -1
 		res.ErrorMsg = "该座位已被占用"
 		return
@@ -146,14 +145,6 @@ func getBlindMatchGetReq(r *http.Request) (req *BlindMatchGetReq, err error) {
 		err = fmt.Errorf("缺少 userID 参数")
 		return
 	}
-	req.UserID = userID.(int32)
+	req.UserID = userID.(int)
 	return
-}
-
-func GetNickNameFromUserInfoMap(userMap map[int32]*model.UserModel, userID int32) string {
-	if userInfo, ok := userMap[userID]; ok {
-		return userInfo.NickName
-	}
-	return ""
-
 }
