@@ -26,11 +26,30 @@ func RoomInfoHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(msg)
 }
 
-func DateRoomHandler(w http.ResponseWriter, r *http.Request) {
+func DateRoomInHandler(w http.ResponseWriter, r *http.Request) {
 	res := &service.JsonResult{}
 
 	if r.Method == http.MethodPost {
-		res = service.DateRoomPostFunc(r)
+		res = service.DateRoomInPostFunc(r)
+	} else {
+		res.Code = -1
+		res.ErrorMsg = fmt.Sprintf("请求方法 %s 不支持", r.Method)
+	}
+
+	msg, err := json.Marshal(res)
+	if err != nil {
+		fmt.Fprint(w, "内部错误")
+		return
+	}
+	w.Header().Set("content-type", "application/json")
+	w.Write(msg)
+}
+
+func DateRoomOutHandler(w http.ResponseWriter, r *http.Request) {
+	res := &service.JsonResult{}
+
+	if r.Method == http.MethodPost {
+		res = service.DateRoomOutPostFunc(r)
 	} else {
 		res.Code = -1
 		res.ErrorMsg = fmt.Sprintf("请求方法 %s 不支持", r.Method)

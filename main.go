@@ -28,22 +28,27 @@ func main() {
 	// 2.(功能1)展示当前座位情况 Done
 	// 3.(功能1)录入选定座位 Done
 	// 4.(功能1)展示本人当前座位 Done
-	http.HandleFunc("api/allSeat", handler.AllSeatHandler)
+	http.HandleFunc("/api/allSeat", handler.AllSeatHandler)
 	http.HandleFunc("/api/seat", handler.SeatHandler)
 	// 5.(功能2)发起匹配
 	// 6.(功能2)匹配成功回调 含微信消息推送
 	// 7.(功能2)展示匹配成功信息页
 	//TODO
-	http.HandleFunc("api/blindMatch", handler.BlindMatchHandler)
-	http.HandleFunc("api/callback/blindMatch", handler.AllSeatHandler)
+	http.HandleFunc("/api/blindMatch", handler.BlindMatchHandler)
+	http.HandleFunc("/api/callback/blindMatch", handler.AllSeatHandler)
 	// 8.(功能3)展示当前房间状态 Done
 	// 9.(功能3)选择房间/座位 Done
-	// 10.(功能3)确认约会
-	// 11.(功能3)确认结束约会
+	// 21.(功能3)退出约会房间（补） Done
+	// 10.(功能3)确认约会 Done
+	// 11.(功能3)确认结束约会 Done
 	// 12.(功能3)提交约会结果
 	// 13.(功能3)约会结果回调 含微信消息推送
-	http.HandleFunc("api/roomInfo", handler.RoomInfoHandler)
-	http.HandleFunc("api/dateRoom", handler.DateRoomHandler)
+	http.HandleFunc("/api/roomInfo", handler.RoomInfoHandler)
+	http.HandleFunc("/api/dateRoomIn", handler.DateRoomInHandler)
+	http.HandleFunc("/api/dateRoomOut", handler.DateRoomOutHandler)
 	http.HandleFunc("/api/dateStart", handler.DateStartHandler)
+	http.HandleFunc("/api/dateStop", handler.DateStopHandler)
+	http.HandleFunc("/api/dateResultSubmit", handler.DateResultSubmitHandler)
+
 	log.Fatal(http.ListenAndServe(":80", nil))
 }

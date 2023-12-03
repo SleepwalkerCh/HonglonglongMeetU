@@ -26,7 +26,11 @@ type RoomInfoGetResp struct {
 	RoomInfo  []*RoomInfo `json:"roomInfo"`
 }
 
-type DateRoomPostReq struct {
+type DateRoomInPostReq struct {
+	UserID int `json:"userID"`
+	RoomID int `json:"roomID"`
+}
+type DateRoomOutPostReq struct {
 	UserID int `json:"userID"`
 	RoomID int `json:"roomID"`
 }
@@ -67,13 +71,13 @@ func RoomInfoGetFunc(r *http.Request) (res *JsonResult) {
 	return
 }
 
-func DateRoomPostFunc(r *http.Request) (res *JsonResult) {
+func DateRoomInPostFunc(r *http.Request) (res *JsonResult) {
 	res = &JsonResult{}
 	res.Code = 0
 	res.ErrorMsg = ""
 
 	//解析入参
-	req, err := getDateRoomPostReq(r)
+	req, err := getDateRoomInPostReq(r)
 	if err != nil {
 		res.Code = -1
 		res.ErrorMsg = err.Error()
@@ -120,6 +124,59 @@ func DateRoomPostFunc(r *http.Request) (res *JsonResult) {
 	}
 	return
 }
+func DateRoomOutPostFunc(r *http.Request) (res *JsonResult) {
+	res = &JsonResult{}
+	res.Code = 0
+	res.ErrorMsg = ""
+
+	//解析入参
+	req, err := getDateRoomOutPostReq(r)
+	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	gender, err := GetGenderByUserID(req.UserID)
+	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	dateRooms, err := dao.IDateRoomInterface.GetDateRoomByID(req.RoomID)
+	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	if len(dateRooms) == 0 {
+		err = fmt.Errorf("roomID is invalid,roomID:%v", req.RoomID)
+		return
+	}
+	dateRoom := dateRooms[0]
+	if gender == model.MaleGender {
+		if dateRoom.UserIDMale != req.UserID {
+			err = fmt.Errorf("this user is not in this room,roomID:%v,userID:%v", req.RoomID, req.UserID)
+			res.Code = -1
+			res.ErrorMsg = err.Error()
+			return
+		}
+	} else {
+		if dateRoom.UserIDFemale != req.UserID {
+			err = fmt.Errorf("this user is not in this room,roomID:%v,userID:%v", req.RoomID, req.UserID)
+			res.Code = -1
+			res.ErrorMsg = err.Error()
+			return
+		}
+	}
+	//可能有并发问题
+	err = dao.IDateRoomInterface.UpdateRoomWithUserIDAndGender(req.RoomID, req.UserID, gender, dao.OutAction)
+	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	return
+}
 
 func getRoomInfoGetReq(r *http.Request) (req *RoomInfoGetReq, err error) {
 	req = new(RoomInfoGetReq)
@@ -145,8 +202,31 @@ func getRoomInfoGetReq(r *http.Request) (req *RoomInfoGetReq, err error) {
 	return
 }
 
-func getDateRoomPostReq(r *http.Request) (req *DateRoomPostReq, err error) {
-	req = new(DateRoomPostReq)
+func getDateRoomInPostReq(r *http.Request) (req *DateRoomInPostReq, err error) {
+	req = new(DateRoomInPostReq)
+	decoder := json.NewDecoder(r.Body)
+	body := make(map[string]interface{})
+	if err = decoder.Decode(&body); err != nil {
+		return
+	}
+	defer r.Body.Close()
+
+	userID, ok := body["userID"]
+	if !ok {
+		err = fmt.Errorf("缺少 userID 参数")
+		return
+	}
+	roomID, ok := body["roomID"]
+	if !ok {
+		err = fmt.Errorf("缺少 roomID 参数")
+		return
+	}
+	req.UserID = userID.(int)
+	req.RoomID = roomID.(int)
+	return
+}
+func getDateRoomOutPostReq(r *http.Request) (req *DateRoomOutPostReq, err error) {
+	req = new(DateRoomOutPostReq)
 	decoder := json.NewDecoder(r.Body)
 	body := make(map[string]interface{})
 	if err = decoder.Decode(&body); err != nil {
