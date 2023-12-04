@@ -28,5 +28,4 @@ const (
 const (
 	DatingStatus int = iota
 	FinishedStatus
-	JudgedStatus
 )

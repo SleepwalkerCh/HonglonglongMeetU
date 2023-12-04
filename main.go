@@ -41,7 +41,7 @@ func main() {
 	// 21.(功能3)退出约会房间（补） Done
 	// 10.(功能3)确认约会 Done
 	// 11.(功能3)确认结束约会 Done
-	// 12.(功能3)提交约会结果
+	// 12.(功能3)提交约会结果 Done
 	// 13.(功能3)约会结果回调 含微信消息推送
 	http.HandleFunc("/api/roomInfo", handler.RoomInfoHandler)
 	http.HandleFunc("/api/dateRoomIn", handler.DateRoomInHandler)

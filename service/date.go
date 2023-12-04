@@ -13,10 +13,16 @@ type DateStartPostReq struct {
 	FemaleUserID int `json:"femaleUserID"`
 	RoomID       int `json:"roomID"`
 }
-type DateStopPost struct {
+type DateStopPostReq struct {
 	MaleUserID   int `json:"maleUserID"`
 	FemaleUserID int `json:"femaleUserID"`
 	RoomID       int `json:"roomID"`
+}
+
+type DateResultSubmitPostReq struct {
+	UserID int `json:"userID"`
+	RoomID int `json:"roomID"`
+	Result int `json:"result"`
 }
 
 func DateStartPostFunc(r *http.Request) (res *JsonResult) {
@@ -81,14 +87,31 @@ func DateResultSubmitPostFunc(r *http.Request) (res *JsonResult) {
 		res.ErrorMsg = err.Error()
 		return
 	}
-	// dateHistory与入参不符
-	if err = CheckDateHistory(req.RoomID, req.MaleUserID, req.FemaleUserID); err != nil {
+	gender, err := GetGenderByUserID(req.UserID)
+	if err != nil {
 		res.Code = -1
 		res.ErrorMsg = err.Error()
 		return
 	}
-	err = dao.IDateHistoryInterface.UpdateDateHistoryStatus(req.RoomID, model.FinishedStatus)
+	dateHistoryList, err := dao.IDateHistoryInterface.GetDateHistoryByUserIDAndGender(req.UserID, gender)
 	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	isCorrect := false
+	for _, dateHistory := range dateHistoryList {
+		if dateHistory.RoomID == req.RoomID {
+			if err = dao.IDateHistoryInterface.UpdateDateHistoryResultByIDAndGender(dateHistory.ID, gender, req.Result); err != nil {
+				res.Code = -1
+				res.ErrorMsg = err.Error()
+				return
+			}
+			isCorrect = true
+		}
+	}
+	if !isCorrect {
+		err = fmt.Errorf("request is in correct,userID:%v,roomID:%v", req.UserID, req.RoomID)
 		res.Code = -1
 		res.ErrorMsg = err.Error()
 		return
@@ -110,8 +133,8 @@ func CheckDateHistory(roomID, maleUserID, femaleUserID int) (err error) {
 	return
 }
 
-func getDateStopPostReq(r *http.Request) (req *DateStopPost, err error) {
-	req = new(DateStopPost)
+func getDateStopPostReq(r *http.Request) (req *DateStopPostReq, err error) {
+	req = new(DateStopPostReq)
 	decoder := json.NewDecoder(r.Body)
 	body := make(map[string]interface{})
 	if err = decoder.Decode(&body); err != nil {
@@ -172,6 +195,33 @@ func getDateStartPostReq(r *http.Request) (req *DateStartPostReq, err error) {
 	return
 }
 
-func getDateResultSubmitPostReq() () {
-	
+func getDateResultSubmitPostReq(r *http.Request) (req *DateResultSubmitPostReq, err error) {
+	req = new(DateResultSubmitPostReq)
+	decoder := json.NewDecoder(r.Body)
+	body := make(map[string]interface{})
+	if err = decoder.Decode(&body); err != nil {
+		return
+	}
+	defer r.Body.Close()
+
+	userID, ok := body["userID"]
+	if !ok {
+		err = fmt.Errorf("缺少 userID 参数")
+		return
+	}
+	roomID, ok := body["roomID"]
+	if !ok {
+		err = fmt.Errorf("缺少 roomID 参数")
+		return
+	}
+	result, ok := body["result"]
+	if !ok {
+		err = fmt.Errorf("缺少 result 参数")
+		return
+	}
+
+	req.UserID = userID.(int)
+	req.RoomID = roomID.(int)
+	req.Result = result.(int)
+	return
 }
