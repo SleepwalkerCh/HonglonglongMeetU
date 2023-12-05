@@ -12,6 +12,7 @@ type UserModelInterface interface {
 	GetAllUsers() ([]*model.UserModel, error)
 	InsertUser(user *model.UserModel) error
 	GetNormalUsersByIDList(userID []int) (userMap map[int]*model.UserModel, err error)
+	GetAllNormalUsers() ([]*model.UserModel, error)
 }
 
 type UserModelInterfaceImp struct{}
@@ -52,6 +53,15 @@ func (u *UserModelInterfaceImp) GetNormalUsersByIDList(userID []int) (userMap ma
 	}
 	for _, user := range users {
 		userMap[user.ID] = user
+	}
+	return
+}
+
+func (u *UserModelInterfaceImp) GetAllNormalUsers() (users []*model.UserModel, err error) {
+	cli := db.Get()
+	users = make([]*model.UserModel, 0)
+	if err = cli.Table(UserTableName).Where("user_type = ?", model.NormalUserType).Where("status = ?", model.NormalStatus).Find(users).Error; err != nil {
+		return
 	}
 	return
 }
