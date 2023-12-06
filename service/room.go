@@ -255,7 +255,7 @@ func MakeDateRoomInfo(dateRooms []*model.DateRoomModel) (roomInfo []*RoomInfo) {
 		userIDList = append(userIDList, dateRoom.UserIDMale)
 		userIDList = append(userIDList, dateRoom.UserIDFemale)
 	}
-	userMap, err := dao.IUserInterface.GetNormalUsersByIDList(userIDList)
+	userMap, err := dao.IUserInterface.GetUsersByIDList(userIDList)
 	if err != nil {
 		return
 	}

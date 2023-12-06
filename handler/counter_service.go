@@ -24,7 +24,7 @@ type JsonResult struct {
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := getIndex()
 	if err != nil {
-		fmt.Fprint(w, "内部错误")
+		fmt.Fprintf(w, "内部错误,err:%v", err.Error())
 		return
 	}
 	fmt.Fprint(w, data)
@@ -57,7 +57,7 @@ func CounterHandler(w http.ResponseWriter, r *http.Request) {
 
 	msg, err := json.Marshal(res)
 	if err != nil {
-		fmt.Fprint(w, "内部错误")
+		fmt.Fprintf(w, "内部错误,err:%v", err.Error())
 		return
 	}
 	w.Header().Set("content-type", "application/json")

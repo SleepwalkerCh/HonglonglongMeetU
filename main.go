@@ -41,15 +41,15 @@ func main() {
 	http.HandleFunc("/api/dateStop", handler.DateStopHandler)
 	http.HandleFunc("/api/dateResultSubmit", handler.DateResultSubmitHandler)
 
-	// 14.(功能4)展示所有用户当前状态
+	// 14.(功能4)展示所有用户当前状态 Done
 	http.HandleFunc("/api/allUserStatus", handler.AllUserStatusHandler)
 
-	// 15.(功能5)查看所有嘉宾信息和状态
-	// 16.(功能5)编辑所有嘉宾信息和状态
+	// 15.(功能5)查看所有嘉宾信息和状态 Done
+	// 16.(功能5)编辑所有嘉宾信息和状态 Done
 	// 17.(功能5)查看约会历史
 	// 18.(功能5)编辑约会历史状态(待定)
 	// 19.(功能5)查看时间段-匹配次数
 	// 20.(功能5)编辑时间段-匹配次数
-
+	http.HandleFunc("/api/userInfo", handler.UserInfoHandler)
 	log.Fatal(http.ListenAndServe(":80", nil))
 }

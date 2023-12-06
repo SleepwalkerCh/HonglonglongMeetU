@@ -68,7 +68,7 @@ func getBlindMatchHistoryFromRawData(rawBlindMatchHistory []*model.BlindMatchMod
 		userIDList = append(userIDList, blindMatch.UserIDMale)
 		userIDList = append(userIDList, blindMatch.UserIDFemale)
 	}
-	userMap, err := dao.IUserInterface.GetNormalUsersByIDList(userIDList)
+	userMap, err := dao.IUserInterface.GetUsersByIDList(userIDList)
 	if err != nil {
 		return
 	}

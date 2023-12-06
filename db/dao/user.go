@@ -11,8 +11,9 @@ const UserTableName = "user"
 type UserModelInterface interface {
 	GetAllUsers() ([]*model.UserModel, error)
 	InsertUser(user *model.UserModel) error
-	GetNormalUsersByIDList(userID []int) (userMap map[int]*model.UserModel, err error)
+	GetUsersByIDList(userID []int) (userMap map[int]*model.UserModel, err error)
 	GetAllNormalUsers() ([]*model.UserModel, error)
+	UpdateUserByID(userID int, updateMap map[string]interface{}) (err error)
 }
 
 type UserModelInterfaceImp struct{}
@@ -36,13 +37,12 @@ func (u *UserModelInterfaceImp) InsertUser(user *model.UserModel) (err error) {
 	return
 }
 
-func (u *UserModelInterfaceImp) GetNormalUsersByIDList(userID []int) (userMap map[int]*model.UserModel, err error) {
+func (u *UserModelInterfaceImp) GetUsersByIDList(userID []int) (userMap map[int]*model.UserModel, err error) {
 	cli := db.Get()
 	userMap = make(map[int]*model.UserModel)
 	users := make([]*model.UserModel, 0)
 	if err = cli.Table(UserTableName).
 		Where("id = ?", userID).
-		Where("status = ?", model.NormalStatus).
 		Where("user_type = ?", model.NormalUserType).
 		Find(users).Error; err != nil {
 		return
@@ -61,6 +61,14 @@ func (u *UserModelInterfaceImp) GetAllNormalUsers() (users []*model.UserModel, e
 	cli := db.Get()
 	users = make([]*model.UserModel, 0)
 	if err = cli.Table(UserTableName).Where("user_type = ?", model.NormalUserType).Where("status = ?", model.NormalStatus).Find(users).Error; err != nil {
+		return
+	}
+	return
+}
+
+func (u *UserModelInterfaceImp) UpdateUserByID(userID int, updateMap map[string]interface{}) (err error) {
+	cli := db.Get()
+	if err = cli.Table(UserTableName).Where("id = ?", userID).Updates(updateMap).Error; err != nil {
 		return
 	}
 	return

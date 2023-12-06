@@ -12,6 +12,7 @@ type SeatModelInterface interface {
 	GetSeatBySeatID(seatID int) ([]*model.SeatModel, error)
 	GetAllSeats() ([]*model.SeatModel, error)
 	UpdateSeatBySeatID(seatID, userID int) error
+	RemoveSeatByUserID(userID int) (err error)
 }
 
 type SeatModelInterfaceImp struct{}
@@ -48,6 +49,14 @@ func (s *SeatModelInterfaceImp) GetSeatBySeatID(seatID int) (seatInfo []*model.S
 func (s *SeatModelInterfaceImp) UpdateSeatBySeatID(seatID, userID int) (err error) {
 	cli := db.Get()
 	if err = cli.Table(SeatTableName).Where("id = ?", seatID).Updates(map[string]interface{}{"userID": userID, "status": model.OccupiedStatus}).Error; err != nil {
+		return
+	}
+	return
+}
+
+func (s *SeatModelInterfaceImp) RemoveSeatByUserID(userID int) (err error) {
+	cli := db.Get()
+	if err = cli.Table(SeatTableName).Where("userid = ?", userID).Updates(map[string]interface{}{"userID": 0, "status": model.FreeStatus}).Error; err != nil {
 		return
 	}
 	return
