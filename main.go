@@ -51,5 +51,6 @@ func main() {
 	// 19.(功能5)查看时间段-匹配次数
 	// 20.(功能5)编辑时间段-匹配次数
 	http.HandleFunc("/api/userInfo", handler.UserInfoHandler)
+	http.HandleFunc("/api/dateHistory", handler.DateHistoryHandler)
 	log.Fatal(http.ListenAndServe(":80", nil))
 }

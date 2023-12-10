@@ -269,7 +269,6 @@ func getUserInfoPostReq(r *http.Request) (req *UserInfoPostReq, err error) {
 	if !ok {
 		req.SeatID = seatID.(int)
 	}
-
 	return
 }
 func CheckAdminByUserID(userID int) (isAdmin bool) {

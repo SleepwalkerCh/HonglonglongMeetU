@@ -14,6 +14,7 @@ type DateHistoryModelInterface interface {
 	GetDateHistoryByUserIDAndGender(userID, gender int) (dateHistory []*model.DateHistoryModel, err error)
 	UpdateDateHistoryResultByIDAndGender(ID, gender, result int) (err error)
 	GetAllDatingDateHistory() (dateHistoryList []*model.DateHistoryModel, err error)
+	GetAllDateHistory() (dateHistory []*model.DateHistoryModel, err error)
 }
 
 type DateHistoryModelInterfaceImp struct{}
@@ -87,6 +88,15 @@ func (d DateHistoryModelInterfaceImp) GetAllDatingDateHistory() (dateHistory []*
 	cli := db.Get()
 	dateHistory = make([]*model.DateHistoryModel, 0)
 	if err = cli.Table(DateHistoryTableName).Where("status = ?", model.DatingStatus).Order("created_at desc").Find(dateHistory).Error; err != nil {
+		return
+	}
+	return
+}
+
+func (d DateHistoryModelInterfaceImp) GetAllDateHistory() (dateHistory []*model.DateHistoryModel, err error) {
+	cli := db.Get()
+	dateHistory = make([]*model.DateHistoryModel, 0)
+	if err = cli.Table(DateHistoryTableName).Order("created_at desc").Find(dateHistory).Error; err != nil {
 		return
 	}
 	return
