@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 	"wxcloudrun-golang/db/dao"
 )
 
@@ -73,7 +72,7 @@ func DateHistoryGetFunc(r *http.Request) (res *JsonResult) {
 			Status:         dateHistory.Status,
 			ResultMale:     dateHistory.ResultMale,
 			ResultFemale:   dateHistory.ResultFemale,
-			DateTime:       dateHistory.CreatedAt.Format(time.DateTime),
+			DateTime:       dateHistory.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
 		})
 	}
 
