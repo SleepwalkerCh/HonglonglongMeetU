@@ -31,7 +31,6 @@ func BlindMatchGetFunc(r *http.Request) (res *JsonResult) {
 	res.Code = 0
 	res.ErrorMsg = ""
 
-
 	req, err := getBlindMatchGetReq(r)
 	if err != nil {
 		res.Code = -1
@@ -54,7 +53,7 @@ func BlindMatchGetFunc(r *http.Request) (res *JsonResult) {
 		return
 	}
 	res.Data = &BlindMatchGetResp{
-		BlindMatching:     BlindMatching,
+		//BlindMatching:     BlindMatching,
 		BlindMatchHistory: blindMatchHistory,
 	}
 	return
@@ -88,46 +87,47 @@ func getBlindMatchHistoryFromRawData(rawBlindMatchHistory []*model.BlindMatchMod
 
 // TODO
 func BlindMatchPostFunc(r *http.Request) (res *JsonResult) {
-	res = &JsonResult{}
-	res.Code = 0
-	res.ErrorMsg = ""
-
-	//解析入参
-	req, err := getBlindMatchPostReq(r)
-	if err != nil {
-		res.Code = -1
-		res.ErrorMsg = err.Error()
-		return
-	}
-	seat, err := dao.ISeatInterface.GetSeatByUserID(req.UserID)
-	if err != nil {
-		res.Code = -1
-		res.ErrorMsg = err.Error()
-		return
-	}
-	if len(seat) != 0 {
-		res.Code = -1
-		res.ErrorMsg = "该用户已有座位"
-		return
-	}
-	seat, err = dao.ISeatInterface.GetSeatBySeatID(req.SeatID)
-	if err != nil {
-		res.Code = -1
-		res.ErrorMsg = err.Error()
-		return
-	}
-	if len(seat) != 0 && seat[0].Status != model.FreeStatus) {
-		res.Code = -1
-		res.ErrorMsg = "该座位已被占用"
-		return
-	}
-	err = dao.ISeatInterface.UpdateSeatBySeatID(req.SeatID, req.UserID)
-	if err != nil {
-		res.Code = -1
-		res.ErrorMsg = "数据库操作失败"
-		// TODO 补充错误日志
-		return
-	}
+	//res = &JsonResult{}
+	//res.Code = 0
+	//res.ErrorMsg = ""
+	//
+	////解析入参
+	//req, err := getBlindMatchPostReq(r)
+	//if err != nil {
+	//	res.Code = -1
+	//	res.ErrorMsg = err.Error()
+	//	return
+	//}
+	//seat, err := dao.ISeatInterface.GetSeatByUserID(req.UserID)
+	//if err != nil {
+	//	res.Code = -1
+	//	res.ErrorMsg = err.Error()
+	//	return
+	//}
+	//if len(seat) != 0 {
+	//	res.Code = -1
+	//	res.ErrorMsg = "该用户已有座位"
+	//	return
+	//}
+	//seat, err = dao.ISeatInterface.GetSeatBySeatID(req.SeatID)
+	//if err != nil {
+	//	res.Code = -1
+	//	res.ErrorMsg = err.Error()
+	//	return
+	//}
+	//if len(seat) != 0 && seat[0].Status != model.FreeStatus) {
+	//	res.Code = -1
+	//	res.ErrorMsg = "该座位已被占用"
+	//	return
+	//}
+	//err = dao.ISeatInterface.UpdateSeatBySeatID(req.SeatID, req.UserID)
+	//if err != nil {
+	//	res.Code = -1
+	//	res.ErrorMsg = "数据库操作失败"
+	//	// TODO 补充错误日志
+	//	return
+	//}
+	//return
 	return
 }
 
