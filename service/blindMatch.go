@@ -26,6 +26,10 @@ type BlindMatchGetResp struct {
 	BlindMatchHistory []*BlindMatchRecord `json:"blindMatchHistory"`
 }
 
+type BlindMatchPostReq struct {
+	UserID int `json:"userID"`
+}
+
 func BlindMatchGetFunc(r *http.Request) (res *JsonResult) {
 	res = &JsonResult{}
 	res.Code = 0
@@ -85,19 +89,37 @@ func getBlindMatchHistoryFromRawData(rawBlindMatchHistory []*model.BlindMatchMod
 	return
 }
 
-// TODO
+// BlindMatchPostFunc TODO 先不考虑次数限制
 func BlindMatchPostFunc(r *http.Request) (res *JsonResult) {
-	//res = &JsonResult{}
-	//res.Code = 0
-	//res.ErrorMsg = ""
-	//
-	////解析入参
-	//req, err := getBlindMatchPostReq(r)
-	//if err != nil {
-	//	res.Code = -1
-	//	res.ErrorMsg = err.Error()
-	//	return
-	//}
+	res = &JsonResult{}
+	res.Code = 0
+	res.ErrorMsg = ""
+
+	//解析入参
+	req, err := getBlindMatchPostReq(r)
+	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	userMap, err := dao.IUserInterface.GetUsersByIDList([]int{req.UserID})
+	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	userInfo, ok := userMap[req.UserID]
+	if !ok {
+		err = fmt.Errorf("can not find userID:%v", req.UserID)
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	partnerGender := model.MaleGender
+	if userInfo.Gender == model.MaleGender {
+		partnerGender = model.FemaleGender
+	}
+	dao.IBlindMatchInterface.GetBlindMatchHistoryByGenderAndTime(partnerGender)
 	//seat, err := dao.ISeatInterface.GetSeatByUserID(req.UserID)
 	//if err != nil {
 	//	res.Code = -1
@@ -133,6 +155,24 @@ func BlindMatchPostFunc(r *http.Request) (res *JsonResult) {
 
 func getBlindMatchGetReq(r *http.Request) (req *BlindMatchGetReq, err error) {
 	req = new(BlindMatchGetReq)
+	decoder := json.NewDecoder(r.Body)
+	body := make(map[string]interface{})
+	if err = decoder.Decode(&body); err != nil {
+		return
+	}
+	defer r.Body.Close()
+
+	userID, ok := body["userID"]
+	if !ok {
+		err = fmt.Errorf("缺少 userID 参数")
+		return
+	}
+	req.UserID = userID.(int)
+	return
+}
+
+func getBlindMatchPostReq(r *http.Request) (req *BlindMatchPostReq, err error) {
+	req = new(BlindMatchPostReq)
 	decoder := json.NewDecoder(r.Body)
 	body := make(map[string]interface{})
 	if err = decoder.Decode(&body); err != nil {

@@ -11,6 +11,7 @@ type DateHistoryModelInterface interface {
 	CreateDateHistoryRecord(roomID, maleUserID, femaleUserID int) (err error)
 	GetDateHistoryByRoomIDAndStatus(roomID int, status int) (dateHistory []*model.DateHistoryModel, err error)
 	UpdateDateHistoryStatus(roomID, status int) (err error)
+	UpdateDateHistoryByID(roomID int, updateMap map[string]interface{}) (err error)
 	GetDateHistoryByUserIDAndGender(userID, gender int) (dateHistory []*model.DateHistoryModel, err error)
 	UpdateDateHistoryResultByIDAndGender(ID, gender, result int) (err error)
 	GetAllDatingDateHistory() (dateHistoryList []*model.DateHistoryModel, err error)
@@ -97,6 +98,14 @@ func (d DateHistoryModelInterfaceImp) GetAllDateHistory() (dateHistory []*model.
 	cli := db.Get()
 	dateHistory = make([]*model.DateHistoryModel, 0)
 	if err = cli.Table(DateHistoryTableName).Order("created_at desc").Find(dateHistory).Error; err != nil {
+		return
+	}
+	return
+}
+
+func (d DateHistoryModelInterfaceImp) UpdateDateHistoryByID(roomID int, updateMap map[string]interface{}) (err error) {
+	cli := db.Get()
+	if err = cli.Table(DateHistoryTableName).Where("id = ?", roomID).Updates(updateMap).Error; err != nil {
 		return
 	}
 	return

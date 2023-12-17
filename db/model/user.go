@@ -16,6 +16,7 @@ type UserModel struct {
 
 const (
 	MaleGender int = iota
+	FemaleGender
 )
 
 const (
