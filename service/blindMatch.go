@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 	"wxcloudrun-golang/db/dao"
 	"wxcloudrun-golang/db/model"
 )
@@ -29,6 +30,9 @@ type BlindMatchGetResp struct {
 type BlindMatchPostReq struct {
 	UserID int `json:"userID"`
 }
+type BlindMatchPostResp struct {
+	AvailableCnt int `json:"availableCnt"`
+}
 
 func BlindMatchGetFunc(r *http.Request) (res *JsonResult) {
 	res = &JsonResult{}
@@ -42,8 +46,12 @@ func BlindMatchGetFunc(r *http.Request) (res *JsonResult) {
 		return
 	}
 	gender, err := GetGenderByUserID(req.UserID)
-
-	rawBlindMatchHistory, err := dao.IBlindMatchInterface.GetBlindMatchHistoryByUserIDAndGender(req.UserID, int(gender))
+	if err != nil {
+		res.Code = -1
+		res.ErrorMsg = err.Error()
+		return
+	}
+	rawBlindMatchHistory, err := dao.IBlindMatchInterface.GetBlindMatchHistoryByUserIDAndGender(req.UserID, gender)
 	if err != nil {
 		res.Code = -1
 		res.ErrorMsg = err.Error()
@@ -102,54 +110,32 @@ func BlindMatchPostFunc(r *http.Request) (res *JsonResult) {
 		res.ErrorMsg = err.Error()
 		return
 	}
-	userMap, err := dao.IUserInterface.GetUsersByIDList([]int{req.UserID})
+	gender, err := GetGenderByUserID(req.UserID)
 	if err != nil {
 		res.Code = -1
 		res.ErrorMsg = err.Error()
 		return
 	}
-	userInfo, ok := userMap[req.UserID]
-	if !ok {
-		err = fmt.Errorf("can not find userID:%v", req.UserID)
-		res.Code = -1
-		res.ErrorMsg = err.Error()
-		return
+	// 时间点逻辑
+	blindMatchHistory, err := dao.IBlindMatchInterface.GetBlindMatchHistoryByGenderAndTime(gender, time.Now().Add(-1*time.Hour).Format("2006-01-02T15:04:05Z07:00"))
+	if len(blindMatchHistory) == 0 {
+		// 未有异性待匹配中，需初始化一条记录
+		err = dao.IBlindMatchInterface.CreateBlindMatchHistoryWithUserID(req.UserID, gender)
+		if err != nil {
+			res.Code = -1
+			res.ErrorMsg = err.Error()
+			return
+		}
+	} else {
+		// 已有异性待匹配中，直接更改该条记录
+		err = dao.IBlindMatchInterface.UpdateBlindMatchHistoryUserByID(blindMatchHistory[0].ID, req.UserID, gender)
+		if err != nil {
+			res.Code = -1
+			res.ErrorMsg = err.Error()
+			return
+		}
 	}
-	partnerGender := model.MaleGender
-	if userInfo.Gender == model.MaleGender {
-		partnerGender = model.FemaleGender
-	}
-	dao.IBlindMatchInterface.GetBlindMatchHistoryByGenderAndTime(partnerGender)
-	//seat, err := dao.ISeatInterface.GetSeatByUserID(req.UserID)
-	//if err != nil {
-	//	res.Code = -1
-	//	res.ErrorMsg = err.Error()
-	//	return
-	//}
-	//if len(seat) != 0 {
-	//	res.Code = -1
-	//	res.ErrorMsg = "该用户已有座位"
-	//	return
-	//}
-	//seat, err = dao.ISeatInterface.GetSeatBySeatID(req.SeatID)
-	//if err != nil {
-	//	res.Code = -1
-	//	res.ErrorMsg = err.Error()
-	//	return
-	//}
-	//if len(seat) != 0 && seat[0].Status != model.FreeStatus) {
-	//	res.Code = -1
-	//	res.ErrorMsg = "该座位已被占用"
-	//	return
-	//}
-	//err = dao.ISeatInterface.UpdateSeatBySeatID(req.SeatID, req.UserID)
-	//if err != nil {
-	//	res.Code = -1
-	//	res.ErrorMsg = "数据库操作失败"
-	//	// TODO 补充错误日志
-	//	return
-	//}
-	//return
+	res.Data = &BlindMatchPostResp{AvailableCnt: 0}
 	return
 }
 
