@@ -10,6 +10,7 @@ type UserModel struct {
 	Gender    int       `gorm:"column:gender" json:"gender"`
 	UserType  int       `gorm:"column:user_type" json:"userType"`
 	Status    int       `gorm:"column:status" json:"status"` // 0-异常 1-正常
+	OpenID    string    `gorm:"column:openid" json:"openID"`
 	CreatedAt time.Time `gorm:"column:createdAt" json:"createdAt"`
 	UpdatedAt time.Time `gorm:"column:updatedAt" json:"updatedAt"`
 }

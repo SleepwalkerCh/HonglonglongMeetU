@@ -14,6 +14,7 @@ type UserModelInterface interface {
 	GetUsersByIDList(userID []int) (userMap map[int]*model.UserModel, err error)
 	GetAllNormalUsers() ([]*model.UserModel, error)
 	UpdateUserByID(userID int, updateMap map[string]interface{}) (err error)
+	GetUserByOpenID(openID string) (user *model.UserModel, err error)
 }
 
 type UserModelInterfaceImp struct{}
@@ -70,6 +71,18 @@ func (u *UserModelInterfaceImp) UpdateUserByID(userID int, updateMap map[string]
 	cli := db.Get()
 	if err = cli.Table(UserTableName).Where("id = ?", userID).Updates(updateMap).Error; err != nil {
 		return
+	}
+	return
+}
+
+func (u *UserModelInterfaceImp) GetUserByOpenID(openID string) (user *model.UserModel, err error) {
+	userList := make([]*model.UserModel, 0)
+	cli := db.Get()
+	if err = cli.Table(UserTableName).Where("openid = ?", openID).Find(userList).Error; err != nil {
+		return
+	}
+	if len(userList) > 0 {
+		user = userList[0]
 	}
 	return
 }
