@@ -17,7 +17,7 @@ func main() {
 	http.HandleFunc("/api/count", handler.CounterHandler)
 	// 1.(功能0)录入信息并提交 昵称+真名+性别+验证码(区分是否为嘉宾或工作人员) todo
 	http.HandleFunc("/api/signup", handler.SignupHandler)
-	http.HandleFunc("/api/login", handler.LoginHandler)
+	http.HandleFunc("/api/signin", handler.LoginHandler)
 	// 2.(功能1)展示当前座位情况 Done
 	// 3.(功能1)录入选定座位 Done
 	// 4.(功能1)展示本人当前座位 Done
