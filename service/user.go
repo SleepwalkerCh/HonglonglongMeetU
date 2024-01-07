@@ -251,11 +251,11 @@ func getUserInfoPostReq(r *http.Request) (req *UserInfoPostReq, err error) {
 		err = fmt.Errorf("缺少 userID 参数")
 		return
 	}
-	req.OperateUserID = operateUserID.(int)
-	req.UserID = userID.(int)
+	req.OperateUserID = int(operateUserID.(float64))
+	req.UserID = int(userID.(float64))
 	status, ok := body["status"]
 	if ok {
-		req.Status = status.(int)
+		req.Status = int(status.(float64))
 	}
 	nickName, ok := body["nickName"]
 	if ok {
@@ -267,7 +267,7 @@ func getUserInfoPostReq(r *http.Request) (req *UserInfoPostReq, err error) {
 	}
 	seatID, ok := body["seatID"]
 	if !ok {
-		req.SeatID = seatID.(int)
+		req.SeatID = int(seatID.(float64))
 	}
 	return
 }

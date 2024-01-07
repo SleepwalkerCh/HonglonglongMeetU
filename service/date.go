@@ -158,9 +158,9 @@ func getDateStopPostReq(r *http.Request) (req *DateStopPostReq, err error) {
 		return
 	}
 
-	req.MaleUserID = maleUserID.(int)
-	req.FemaleUserID = femaleUserID.(int)
-	req.RoomID = roomID.(int)
+	req.MaleUserID = int(maleUserID.(float64))
+	req.FemaleUserID = int(femaleUserID.(float64))
+	req.RoomID = int(roomID.(float64))
 	return
 }
 
@@ -189,9 +189,9 @@ func getDateStartPostReq(r *http.Request) (req *DateStartPostReq, err error) {
 		return
 	}
 
-	req.MaleUserID = maleUserID.(int)
-	req.FemaleUserID = femaleUserID.(int)
-	req.RoomID = roomID.(int)
+	req.MaleUserID = int(maleUserID.(float64))
+	req.FemaleUserID = int(femaleUserID.(float64))
+	req.RoomID = int(roomID.(float64))
 	return
 }
 
@@ -220,8 +220,8 @@ func getDateResultSubmitPostReq(r *http.Request) (req *DateResultSubmitPostReq, 
 		return
 	}
 
-	req.UserID = userID.(int)
-	req.RoomID = roomID.(int)
-	req.Result = result.(int)
+	req.UserID = int(userID.(float64))
+	req.RoomID = int(roomID.(float64))
+	req.Result = int(result.(float64))
 	return
 }

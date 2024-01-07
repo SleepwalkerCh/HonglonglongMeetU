@@ -156,7 +156,7 @@ func getDateHistoryGetReq(r *http.Request) (req *DateHistoryGetReq, err error) {
 		err = fmt.Errorf("缺少 operateUserID 参数")
 		return
 	}
-	req.OperateUserID = operateUserID.(int)
+	req.OperateUserID = int(operateUserID.(float32))
 	return
 }
 
@@ -179,8 +179,8 @@ func getDateHistoryPostReq(r *http.Request) (req *DateHistoryPostReq, err error)
 		err = fmt.Errorf("缺少 dateID 参数")
 		return
 	}
-	req.OperateUserID = operateUserID.(int)
-	req.DateID = dateID.(int)
+	req.OperateUserID = int(operateUserID.(float64))
+	req.DateID = int(dateID.(float64))
 	// init req
 	req.UserIDMale = -1
 	req.UserIDFemale = -1
@@ -190,27 +190,27 @@ func getDateHistoryPostReq(r *http.Request) (req *DateHistoryPostReq, err error)
 	req.ResultFemale = -1
 	userIDMale, ok := body["userIDMale"]
 	if ok {
-		req.UserIDMale = userIDMale.(int)
+		req.UserIDMale = int(userIDMale.(float64))
 	}
 	userIDFemale, ok := body["userIDFemale"]
 	if ok {
-		req.UserIDFemale = userIDFemale.(int)
+		req.UserIDFemale = int(userIDFemale.(float64))
 	}
 	roomID, ok := body["roomID"]
 	if ok {
-		req.RoomID = roomID.(int)
+		req.RoomID = int(roomID.(float64))
 	}
 	status, ok := body["status"]
 	if ok {
-		req.Status = status.(int)
+		req.Status = int(status.(float64))
 	}
 	resultMale, ok := body["resultMale"]
 	if ok {
-		req.ResultMale = resultMale.(int)
+		req.ResultMale = int(resultMale.(float64))
 	}
 	resultFemale, ok := body["resultFemale"]
 	if !ok {
-		req.ResultFemale = resultFemale.(int)
+		req.ResultFemale = int(resultFemale.(float64))
 	}
 	return
 }

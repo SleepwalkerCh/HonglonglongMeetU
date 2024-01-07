@@ -162,7 +162,7 @@ func getSeatGetReq(r *http.Request) (req *SeatGetReq, err error) {
 		err = fmt.Errorf("缺少 userID 参数")
 		return
 	}
-	req.UserID = userID.(int)
+	req.UserID = int(userID.(float64))
 	return
 }
 
@@ -185,7 +185,7 @@ func getSeatPostReq(r *http.Request) (req *SeatPostReq, err error) {
 		err = fmt.Errorf("缺少 seatID 参数")
 		return
 	}
-	req.UserID = userID.(int)
-	req.SeatID = seatID.(int)
+	req.UserID = int(userID.(float64))
+	req.SeatID = int(seatID.(float64))
 	return
 }

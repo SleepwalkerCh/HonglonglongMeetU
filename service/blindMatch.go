@@ -153,7 +153,7 @@ func getBlindMatchGetReq(r *http.Request) (req *BlindMatchGetReq, err error) {
 		err = fmt.Errorf("缺少 userID 参数")
 		return
 	}
-	req.UserID = userID.(int)
+	req.UserID = int(userID.(float64))
 	return
 }
 
@@ -171,6 +171,6 @@ func getBlindMatchPostReq(r *http.Request) (req *BlindMatchPostReq, err error) {
 		err = fmt.Errorf("缺少 userID 参数")
 		return
 	}
-	req.UserID = userID.(int)
+	req.UserID = int(userID.(float64))
 	return
 }

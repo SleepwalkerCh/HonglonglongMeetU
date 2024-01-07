@@ -198,7 +198,7 @@ func getRoomInfoGetReq(r *http.Request) (req *RoomInfoGetReq, err error) {
 		return
 	}
 	req.ShowAll = showAll.(bool)
-	req.RoomID = roomID.(int)
+	req.RoomID = int(roomID.(float64))
 	return
 }
 
@@ -221,8 +221,8 @@ func getDateRoomInPostReq(r *http.Request) (req *DateRoomInPostReq, err error) {
 		err = fmt.Errorf("缺少 roomID 参数")
 		return
 	}
-	req.UserID = userID.(int)
-	req.RoomID = roomID.(int)
+	req.UserID = int(userID.(float64))
+	req.RoomID = int(roomID.(float64))
 	return
 }
 func getDateRoomOutPostReq(r *http.Request) (req *DateRoomOutPostReq, err error) {
@@ -244,8 +244,8 @@ func getDateRoomOutPostReq(r *http.Request) (req *DateRoomOutPostReq, err error)
 		err = fmt.Errorf("缺少 roomID 参数")
 		return
 	}
-	req.UserID = userID.(int)
-	req.RoomID = roomID.(int)
+	req.UserID = int(userID.(float64))
+	req.RoomID = int(roomID.(float64))
 	return
 }
 

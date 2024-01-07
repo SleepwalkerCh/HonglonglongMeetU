@@ -130,7 +130,7 @@ func getSignupReq(r *http.Request) (req *SignupReq, err error) {
 		err = fmt.Errorf("缺少 code 参数")
 		return
 	}
-	req.Gender = gender.(int)
+	req.Gender = int(gender.(float64))
 	req.NickName = nickName.(string)
 	req.RealName = realName.(string)
 	req.InviteCode = inviteCode.(string)
