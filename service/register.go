@@ -140,7 +140,7 @@ func getSignupReq(r *http.Request) (req *SignupReq, err error) {
 
 func validateSignupReq(req *SignupReq) (err error) {
 	// gender必须为0,1
-	if tools.InList(req.Gender, []int{0, 1}) {
+	if !tools.InList(req.Gender, []int{0, 1}) {
 		err = fmt.Errorf("gender参数不合法")
 		return
 	}
