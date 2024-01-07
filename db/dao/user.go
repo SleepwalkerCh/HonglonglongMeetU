@@ -78,7 +78,7 @@ func (u *UserModelInterfaceImp) UpdateUserByID(userID int, updateMap map[string]
 func (u *UserModelInterfaceImp) GetUserByOpenID(openID string) (user *model.UserModel, err error) {
 	userList := make([]*model.UserModel, 0)
 	cli := db.Get()
-	if err = cli.Table(UserTableName).Where("openid = ?", openID).Find(userList).Error; err != nil {
+	if err = cli.Table(UserTableName).Where("openid = ?", openID).Find(&userList).Error; err != nil {
 		return
 	}
 	if len(userList) > 0 {
