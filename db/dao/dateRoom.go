@@ -24,7 +24,7 @@ var IDateRoomInterface = &DateRoomModelInterfaceImp{}
 func (d *DateRoomModelInterfaceImp) GetAllDateRoom() (dateRooms []*model.DateRoomModel, err error) {
 	cli := db.Get()
 	dateRooms = make([]*model.DateRoomModel, 0)
-	if err = cli.Table(DateRoomTableName).Find(dateRooms).Error; err != nil {
+	if err = cli.Table(DateRoomTableName).Find(&dateRooms).Error; err != nil {
 		return
 	}
 	return
@@ -33,7 +33,7 @@ func (d *DateRoomModelInterfaceImp) GetAllDateRoom() (dateRooms []*model.DateRoo
 func (d *DateRoomModelInterfaceImp) GetDateRoomByID(roomID int) (dateRooms []*model.DateRoomModel, err error) {
 	cli := db.Get()
 	dateRooms = make([]*model.DateRoomModel, 0)
-	if err = cli.Table(DateRoomTableName).Where("id = ?", roomID).Find(dateRooms).Error; err != nil {
+	if err = cli.Table(DateRoomTableName).Where("id = ?", roomID).Find(&dateRooms).Error; err != nil {
 		return
 	}
 	return

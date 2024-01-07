@@ -41,7 +41,7 @@ func (d DateHistoryModelInterfaceImp) CreateDateHistoryRecord(roomID, maleUserID
 func (d DateHistoryModelInterfaceImp) GetDateHistoryByRoomIDAndStatus(roomID int, status int) (dateHistory []*model.DateHistoryModel, err error) {
 	cli := db.Get()
 	dateHistory = make([]*model.DateHistoryModel, 0)
-	if err = cli.Table(DateHistoryTableName).Where("roomid = ?", roomID).Where("status = ?", status).Order("created_at desc").Find(dateHistory).Error; err != nil {
+	if err = cli.Table(DateHistoryTableName).Where("roomid = ?", roomID).Where("status = ?", status).Order("created_at desc").Find(&dateHistory).Error; err != nil {
 		return
 	}
 	return
@@ -64,7 +64,7 @@ func (d DateHistoryModelInterfaceImp) GetDateHistoryByUserIDAndGender(userID, ge
 	} else {
 		query = query.Where("userid_female = ?", userID)
 	}
-	if err = query.Order("created_at desc").Find(dateHistory).Error; err != nil {
+	if err = query.Order("created_at desc").Find(&dateHistory).Error; err != nil {
 		return
 	}
 	return
@@ -88,7 +88,7 @@ func (d DateHistoryModelInterfaceImp) UpdateDateHistoryResultByIDAndGender(ID, g
 func (d DateHistoryModelInterfaceImp) GetAllDatingDateHistory() (dateHistory []*model.DateHistoryModel, err error) {
 	cli := db.Get()
 	dateHistory = make([]*model.DateHistoryModel, 0)
-	if err = cli.Table(DateHistoryTableName).Where("status = ?", model.DatingStatus).Order("created_at desc").Find(dateHistory).Error; err != nil {
+	if err = cli.Table(DateHistoryTableName).Where("status = ?", model.DatingStatus).Order("created_at desc").Find(&dateHistory).Error; err != nil {
 		return
 	}
 	return
@@ -97,7 +97,7 @@ func (d DateHistoryModelInterfaceImp) GetAllDatingDateHistory() (dateHistory []*
 func (d DateHistoryModelInterfaceImp) GetAllDateHistory() (dateHistory []*model.DateHistoryModel, err error) {
 	cli := db.Get()
 	dateHistory = make([]*model.DateHistoryModel, 0)
-	if err = cli.Table(DateHistoryTableName).Order("created_at desc").Find(dateHistory).Error; err != nil {
+	if err = cli.Table(DateHistoryTableName).Order("created_at desc").Find(&dateHistory).Error; err != nil {
 		return
 	}
 	return

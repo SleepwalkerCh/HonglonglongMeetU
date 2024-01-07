@@ -22,7 +22,7 @@ var ISeatInterface = &SeatModelInterfaceImp{}
 func (s *SeatModelInterfaceImp) GetSeatByUserID(userID int) (seatInfo []*model.SeatModel, err error) {
 	cli := db.Get()
 	seatInfo = make([]*model.SeatModel, 0)
-	if err = cli.Table(SeatTableName).Where("userid = ?", userID).Find(seatInfo).Error; err != nil {
+	if err = cli.Table(SeatTableName).Where("userid = ?", userID).Find(&seatInfo).Error; err != nil {
 		return
 	}
 	return
@@ -31,7 +31,7 @@ func (s *SeatModelInterfaceImp) GetSeatByUserID(userID int) (seatInfo []*model.S
 func (s *SeatModelInterfaceImp) GetAllSeats() (seats []*model.SeatModel, err error) {
 	cli := db.Get()
 	seats = make([]*model.SeatModel, 0)
-	if err = cli.Table(SeatTableName).Find(seats).Error; err != nil {
+	if err = cli.Table(SeatTableName).Find(&seats).Error; err != nil {
 		return
 	}
 	return
@@ -40,7 +40,7 @@ func (s *SeatModelInterfaceImp) GetAllSeats() (seats []*model.SeatModel, err err
 func (s *SeatModelInterfaceImp) GetSeatBySeatID(seatID int) (seatInfo []*model.SeatModel, err error) {
 	cli := db.Get()
 	seatInfo = make([]*model.SeatModel, 0)
-	if err = cli.Table(SeatTableName).Where("id = ?", seatID).Find(seatInfo).Error; err != nil {
+	if err = cli.Table(SeatTableName).Where("id = ?", seatID).Find(&seatInfo).Error; err != nil {
 		return
 	}
 	return

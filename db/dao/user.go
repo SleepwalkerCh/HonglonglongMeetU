@@ -24,7 +24,7 @@ var IUserInterface = &UserModelInterfaceImp{}
 func (u *UserModelInterfaceImp) GetAllUsers() (users []*model.UserModel, err error) {
 	cli := db.Get()
 	users = make([]*model.UserModel, 0)
-	if err = cli.Table(UserTableName).Where("status = ?", model.NormalStatus).Find(users).Error; err != nil {
+	if err = cli.Table(UserTableName).Where("status = ?", model.NormalStatus).Find(&users).Error; err != nil {
 		return
 	}
 	return
@@ -61,7 +61,7 @@ func (u *UserModelInterfaceImp) GetUsersByIDList(userID []int) (userMap map[int]
 func (u *UserModelInterfaceImp) GetAllNormalUsers() (users []*model.UserModel, err error) {
 	cli := db.Get()
 	users = make([]*model.UserModel, 0)
-	if err = cli.Table(UserTableName).Where("user_type = ?", model.NormalUserType).Where("status = ?", model.NormalStatus).Find(users).Error; err != nil {
+	if err = cli.Table(UserTableName).Where("user_type = ?", model.NormalUserType).Where("status = ?", model.NormalStatus).Find(&users).Error; err != nil {
 		return
 	}
 	return

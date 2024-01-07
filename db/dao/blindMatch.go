@@ -28,7 +28,7 @@ func (b *BlindMatchModelInterfaceImp) GetBlindMatchHistoryByUserIDAndGender(user
 	} else {
 		query = query.Where("userid_female = ?", userID)
 	}
-	if err = query.Order("created_at desc").Find(blindMatchHistory).Error; err != nil {
+	if err = query.Order("created_at desc").Find(&blindMatchHistory).Error; err != nil {
 		return
 	}
 	return
@@ -43,7 +43,7 @@ func (b *BlindMatchModelInterfaceImp) GetBlindMatchHistoryByGenderAndTime(gender
 	} else {
 		query = query.Where("userid_female = ?", model.InitUserID)
 	}
-	if err = query.Where("created_at > ?", time).Find(blindMatchHistory).Error; err != nil {
+	if err = query.Where("created_at > ?", time).Find(&blindMatchHistory).Error; err != nil {
 		return
 	}
 	return
