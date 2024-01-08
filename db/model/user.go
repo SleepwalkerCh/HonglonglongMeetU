@@ -11,8 +11,8 @@ type UserModel struct {
 	UserType  int       `gorm:"column:user_type" json:"userType"`
 	Status    int       `gorm:"column:status" json:"status"` // 0-异常 1-正常
 	OpenID    string    `gorm:"column:openid" json:"openID"`
-	CreatedAt time.Time `gorm:"column:createdAt" json:"createdAt"`
-	UpdatedAt time.Time `gorm:"column:updatedAt" json:"updatedAt"`
+	CreatedAt time.Time `gorm:"column:created_at" json:"created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at" json:"updated_at"`
 }
 
 const (
