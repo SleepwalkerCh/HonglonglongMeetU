@@ -27,6 +27,7 @@ type AllUserStatusGetResp struct {
 
 type UserInfoDetail struct {
 	UserID   int    `json:"userID"`
+	Gender   int    `json:"gender"`
 	Status   int    `json:"status"`
 	NickName string `json:"nickName"`
 	RealName string `json:"realName"`
@@ -137,6 +138,7 @@ func UserInfoGetFunc(r *http.Request) (res *JsonResult) {
 		}
 		userInfoDetail = append(userInfoDetail, &UserInfoDetail{
 			UserID:   user.ID,
+			Gender:   user.Gender,
 			Status:   status,
 			NickName: user.NickName,
 			RealName: user.RealName,
